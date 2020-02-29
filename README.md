@@ -1,13 +1,12 @@
 
-\[![Build
-Status](https://travis-ci.org/ices-tools-prod/icesDevops.svg?branch=devel)\]
-(<https://travis-ci.org/ices-tools-prod/icesDevops>) \[![CRAN
-Status](http://r-pkg.org/badges/version/icesDevops)\]
-(<https://cran.r-project.org/package=icesDevops>) \[![CRAN
-Monthly](http://cranlogs.r-pkg.org/badges/icesDevops)\]
-(<https://cran.r-project.org/package=icesDevops>) \[![CRAN
-Total](http://cranlogs.r-pkg.org/badges/grand-total/icesDevops)\]
-(<https://cran.r-project.org/package=icesDevops>)
+[![Build
+Status](https://travis-ci.org/ices-tools-prod/icesDevops.svg?branch=devel)](https://travis-ci.org/ices-tools-prod/icesDevops)
+[![CRAN
+Status](http://r-pkg.org/badges/version/icesDevops)](https://cran.r-project.org/package=icesDevops)
+[![CRAN
+Monthly](http://cranlogs.r-pkg.org/badges/icesDevops)](https://cran.r-project.org/package=icesDevops)
+[![CRAN
+Total](http://cranlogs.r-pkg.org/badges/grand-total/icesDevops)](https://cran.r-project.org/package=icesDevops)
 
 [<img align="right" alt="ICES Logo" width="17%" height="17%"
   src="http://ices.dk/_layouts/15/1033/images/icesimg/iceslogo.png">](http://ices.dk)
@@ -50,7 +49,12 @@ library(icesDevops)
 
 ## getting and saving your Personal Access Token (PAT)
 
-TODO: need to write this
+To create a PAT login to <https://devops.ices.dk> and follow the
+instructions in this
+[link](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops-2019&tabs=preview-page)
+
+once you have created the token you need to save it somewhere that is
+accessible only to you.
 
 ## list repositories you have access to
 
@@ -103,7 +107,7 @@ res
 ```
 
     ## Response [https://devops.ices.dk/TAF/_apis/git/repositories?api-version=5.1]
-    ##   Date: 2020-02-29 17:42
+    ##   Date: 2020-02-29 18:04
     ##   Status: 200
     ##   Content-Type: application/json; charset=utf-8; api-version=5.1
     ##   Size: 2.38 kB
@@ -151,17 +155,17 @@ repo <-
 ```
 
     ## cloning into 'C:\Users\colin\AppData\Local\Temp\RtmpcDZ0kx/test'...
-    ## Receiving objects:   5% (1/19),    3 kb
-    ## Receiving objects:  15% (3/19),    3 kb
-    ## Receiving objects:  21% (4/19),    3 kb
-    ## Receiving objects:  31% (6/19),    3 kb
-    ## Receiving objects:  42% (8/19),    3 kb
-    ## Receiving objects:  52% (10/19),    3 kb
-    ## Receiving objects:  63% (12/19),    3 kb
-    ## Receiving objects:  73% (14/19),    3 kb
-    ## Receiving objects:  84% (16/19),    3 kb
-    ## Receiving objects:  94% (18/19),    3 kb
-    ## Receiving objects: 100% (19/19),    3 kb, done.
+    ## Receiving objects:   4% (1/22),    3 kb
+    ## Receiving objects:  13% (3/22),    3 kb
+    ## Receiving objects:  22% (5/22),    3 kb
+    ## Receiving objects:  31% (7/22),    3 kb
+    ## Receiving objects:  45% (10/22),    3 kb
+    ## Receiving objects:  54% (12/22),    3 kb
+    ## Receiving objects:  63% (14/22),    3 kb
+    ## Receiving objects:  72% (16/22),    3 kb
+    ## Receiving objects:  81% (18/22),    3 kb
+    ## Receiving objects:  95% (21/22),    3 kb
+    ## Receiving objects: 100% (22/22),    3 kb, done.
 
 ``` r
 repo
@@ -169,7 +173,7 @@ repo
 
     ## Local:    master C:/Users/colin/AppData/Local/Temp/RtmpcDZ0kx/test
     ## Remote:   master @ origin (https://devops.ices.dk/TAF/repositories/_git/test)
-    ## Head:     [d294e33] 2020-02-29: test changes
+    ## Head:     [9554806] 2020-02-29: test changes
 
 ## make a change to a repo, commit and push
 
@@ -202,7 +206,7 @@ git2r::status(repo)
 git2r::commit(repo, all = TRUE, message = "test changes")
 ```
 
-    ## [9554806] 2020-02-29: test changes
+    ## [e44b2a6] 2020-02-29: test changes
 
 ``` r
 git2r::status(repo)
@@ -213,13 +217,6 @@ git2r::status(repo)
 ``` r
 # push!
 devops_push(repo, pat = pat)
-#Sys.sleep(1)
-
-repo
 ```
-
-    ## Local:    master C:/Users/colin/AppData/Local/Temp/RtmpcDZ0kx/test
-    ## Remote:   master @ origin (https://devops.ices.dk/TAF/repositories/_git/test)
-    ## Head:     [9554806] 2020-02-29: test changes
 
 # References
