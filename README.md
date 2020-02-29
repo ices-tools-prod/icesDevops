@@ -11,11 +11,6 @@ Total](http://cranlogs.r-pkg.org/badges/grand-total/icesDevops)](https://cran.r-
 [<img align="right" alt="ICES Logo" width="17%" height="17%"
   src="http://ices.dk/_layouts/15/1033/images/icesimg/iceslogo.png">](http://ices.dk)
 
-``` r
-library(knitr)
-library(icesDevops)
-```
-
 # icesDevops
 
 icesDevops functions to link to the ICES Devops webservices to allow
@@ -54,7 +49,37 @@ instructions in this
 [link](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops-2019&tabs=preview-page)
 
 once you have created the token you need to save it somewhere that is
-accessible only to you.
+accessible only to you. You must **store this token somewhere** because
+you’ll never be able to see it again, once you leave that page or close
+the windows. If you somehow goof this up, just generate a new PAT and,
+so you don’t confuse yourself, delete the lost token.
+
+It is customary to save the PAT as an environment variable in your
+`.Renviron`, with the name `ICESDEVOPS_PAT`.
+
+``` r
+library(usethis)
+edit_r_environ()
+```
+
+`usethis::edit_r_environ()` will open `.Renviron` for editing. Add a
+line like this, **but substitute your PAT**:
+
+``` sh
+ICESDEVOPS_PAT=8c70fd8419398999c9ac5bacf3192882193cadf2
+```
+
+Make sure this file ends in a newline\! Lack of a newline can lead to
+silent failure to load this environment variable, which can be tricky to
+debug.
+
+Restart R and confirm your PAT is now available:
+
+``` r
+Sys.getenv("ICESDEVOPS_PAT")
+# or
+devops_pat()
+```
 
 ## list repositories you have access to
 
@@ -62,7 +87,7 @@ To get a list of the repositories you have access to use the following
 conveinience function, what it does in more detail is listed below.
 
 ``` r
-devops_repos(pat)
+devops_repos()
 ```
 
     ## GETing ...https://devops.ices.dk/TAF/_apis/git/repositories?api-version=5.1
@@ -95,8 +120,7 @@ res <-
     devops_url(
       "repositories",
       area = "git"
-    ),
-    pat
+    )
   )
 ```
 
@@ -107,7 +131,7 @@ res
 ```
 
     ## Response [https://devops.ices.dk/TAF/_apis/git/repositories?api-version=5.1]
-    ##   Date: 2020-02-29 18:04
+    ##   Date: 2020-02-29 19:14
     ##   Status: 200
     ##   Content-Type: application/json; charset=utf-8; api-version=5.1
     ##   Size: 2.38 kB
@@ -137,7 +161,7 @@ repos[c("name", "webUrl")]
 
 ``` r
 # get repository list
-repos <- devops_repos(pat)
+repos <- devops_repos()
 ```
 
     ## GETing ...https://devops.ices.dk/TAF/_apis/git/repositories?api-version=5.1
@@ -149,31 +173,30 @@ remote_url <- repos$remoteUrl[repos$name == "test"]
 repo <-
   devops_clone(
     remote_url,
-    pat,
     local_dir = file.path(tempdir(), "test")
   )
 ```
 
-    ## cloning into 'C:\Users\colin\AppData\Local\Temp\RtmpcDZ0kx/test'...
-    ## Receiving objects:   4% (1/22),    3 kb
-    ## Receiving objects:  13% (3/22),    3 kb
-    ## Receiving objects:  22% (5/22),    3 kb
-    ## Receiving objects:  31% (7/22),    3 kb
-    ## Receiving objects:  45% (10/22),    3 kb
-    ## Receiving objects:  54% (12/22),    3 kb
-    ## Receiving objects:  63% (14/22),    3 kb
-    ## Receiving objects:  72% (16/22),    3 kb
-    ## Receiving objects:  81% (18/22),    3 kb
-    ## Receiving objects:  95% (21/22),    3 kb
-    ## Receiving objects: 100% (22/22),    3 kb, done.
+    ## cloning into 'C:\Users\colin\AppData\Local\Temp\RtmpUbWoDh/test'...
+    ## Receiving objects:   2% (1/34),    5 kb
+    ## Receiving objects:  11% (4/34),    5 kb
+    ## Receiving objects:  23% (8/34),    5 kb
+    ## Receiving objects:  32% (11/34),    5 kb
+    ## Receiving objects:  41% (14/34),    5 kb
+    ## Receiving objects:  52% (18/34),    5 kb
+    ## Receiving objects:  61% (21/34),    5 kb
+    ## Receiving objects:  73% (25/34),    5 kb
+    ## Receiving objects:  82% (28/34),    5 kb
+    ## Receiving objects:  91% (31/34),    5 kb
+    ## Receiving objects: 100% (34/34),    5 kb, done.
 
 ``` r
 repo
 ```
 
-    ## Local:    master C:/Users/colin/AppData/Local/Temp/RtmpcDZ0kx/test
+    ## Local:    master C:/Users/colin/AppData/Local/Temp/RtmpUbWoDh/test
     ## Remote:   master @ origin (https://devops.ices.dk/TAF/repositories/_git/test)
-    ## Head:     [9554806] 2020-02-29: test changes
+    ## Head:     [c1a6758] 2020-02-29: test changes
 
 ## make a change to a repo, commit and push
 
@@ -183,7 +206,7 @@ old_dir <- setwd(workdir(repo))
 # run taf.skeleton to ensure all taf files exist
 icesTAF::taf.skeleton()
 # as a test add some comments to the end of data.R
-cat("# some more comments on", date(), file = "data.R", append = TRUE)
+cat("# some more comments on", date(), "\n", file = "data.R", append = TRUE)
 setwd(old_dir)
 
 git2r::status(repo)
@@ -195,28 +218,17 @@ git2r::status(repo)
 ``` r
 # add all files
 git2r::add(repo, path = "*")
-git2r::status(repo)
-```
-
-    ## Staged changes:
-    ##  Modified:   data.R
-
-``` r
 # commit
 git2r::commit(repo, all = TRUE, message = "test changes")
 ```
 
-    ## [e44b2a6] 2020-02-29: test changes
-
-``` r
-git2r::status(repo)
-```
-
-    ## working directory clean
+    ## [19bb9b6] 2020-02-29: test changes
 
 ``` r
 # push!
-devops_push(repo, pat = pat)
+devops_push(repo)
 ```
+
+    ## NULL
 
 # References

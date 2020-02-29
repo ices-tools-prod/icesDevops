@@ -15,7 +15,7 @@ bibliography: README.bib
   src="http://ices.dk/_layouts/15/1033/images/icesimg/iceslogo.png">
 ](http://ices.dk)
 
-```{r, setup, show = FALSE}
+```{r, setup, echo = FALSE}
 library(knitr)
 library(icesDevops)
 ```
@@ -62,7 +62,37 @@ instructions in this
 [link](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops-2019&tabs=preview-page)
 
 once you have created the token you need to save it somewhere that is
-accessible only to you.
+accessible only to you.  You must **store this token somewhere**
+because you'll never be able to see it again, once you leave that
+page or close the windows. If you somehow goof this up, just generate
+a new PAT and, so you don't confuse yourself, delete the lost token.
+
+It is customary to save the PAT as an environment variable in your
+`.Renviron`, with the name `ICESDEVOPS_PAT`.
+
+```{r, eval = FALSE}
+library(usethis)
+edit_r_environ()
+```
+
+`usethis::edit_r_environ()` will open `.Renviron` for editing. Add a
+line like this, **but substitute your PAT**:
+
+```{sh, eval = FALSE}
+ICESDEVOPS_PAT=8c70fd8419398999c9ac5bacf3192882193cadf2
+```
+
+Make sure this file ends in a newline! Lack of a newline can lead to
+silent failure to load this environment variable, which can be tricky
+to debug.
+
+Restart R and confirm your PAT is now available:
+
+```{r, eval = FALSE}
+Sys.getenv("ICESDEVOPS_PAT")
+# or
+devops_pat()
+```
 
 ## list repositories you have access to
 
@@ -70,7 +100,7 @@ To get a list of the repositories you have access to use the following
 conveinience function, what it does in more detail is listed below.
 
 ```{r}
-devops_repos(pat)
+devops_repos()
 ```
 
 At the lowest level, this is how this is done.  First form the url,
@@ -84,8 +114,7 @@ res <-
     devops_url(
       "repositories",
       area = "git"
-    ),
-    pat
+    )
   )
 res
 ```
@@ -111,14 +140,13 @@ if (dir.exists(test_dir)) unlink(test_dir, recursive = TRUE, force = TRUE)
 
 ```{r}
 # get repository list
-repos <- devops_repos(pat)
+repos <- devops_repos()
 # get remote url
 remote_url <- repos$remoteUrl[repos$name == "test"]
 # clone (into a temporary directory)
 repo <-
   devops_clone(
     remote_url,
-    pat,
     local_dir = file.path(tempdir(), "test")
   )
 repo
@@ -132,19 +160,16 @@ old_dir <- setwd(workdir(repo))
 # run taf.skeleton to ensure all taf files exist
 icesTAF::taf.skeleton()
 # as a test add some comments to the end of data.R
-cat("# some more comments on", date(), file = "data.R", append = TRUE)
+cat("# some more comments on", date(), "\n", file = "data.R", append = TRUE)
 setwd(old_dir)
 
 git2r::status(repo)
 # add all files
 git2r::add(repo, path = "*")
-git2r::status(repo)
 # commit
 git2r::commit(repo, all = TRUE, message = "test changes")
-git2r::status(repo)
-
 # push!
-devops_push(repo, pat = pat)
+devops_push(repo)
 ```
 
 
