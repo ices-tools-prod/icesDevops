@@ -1,0 +1,20 @@
+Package: icesDevops
+Version: 1.0.0
+Date: 2020-02-29
+Title: Functions to link to the ICES Devops webservices
+Authors@R:
+  c(
+    person(
+      "Colin", "Millar",
+      role = c("aut", "cre"),
+      email = "colin.millar@ices.dk"
+    )
+  )
+Imports: httr, glue, askpass, git2r
+Description: Functions to link to the ICES Devops webservices to allow
+  users to interact with ICES TAF git repositoroes, and download
+  summaries and data products from ICES TAF repositories.
+License: GPL (>= 2)
+URL: https://devops.ices.dk
+Encoding: UTF-8
+RoxygenNote: 7.0.2
