@@ -10,7 +10,8 @@ Authors@R:
       email = "colin.millar@ices.dk"
     )
   )
-Imports: httr, glue, askpass, git2r
+Imports: httr, glue, askpass, git2r, utils
+Suggests: usethis
 Description: Functions to link to the ICES Devops webservices to allow
   users to interact with ICES TAF git repositoroes, and download
   summaries and data products from ICES TAF repositories.

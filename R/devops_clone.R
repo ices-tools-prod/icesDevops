@@ -12,13 +12,14 @@
 #' @importFrom glue glue
 #'
 #' @export
-devops_clone <- function(remote_url, pat, local_dir = NULL) {
+devops_clone <-
+  function(remote_url, local_dir = NULL, pat = devops_pat()) {
 
   # add pat to remote
   remote_url_pat <-
     glue(
       gsub(
-        "https://",
+        "^https://|^https://.*@",
         "https://pat:{pat}@",
         remote_url
       )

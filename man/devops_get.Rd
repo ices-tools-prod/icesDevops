@@ -4,14 +4,14 @@
 \alias{devops_get}
 \title{Perform a GET request to devops server}
 \usage{
-devops_get(url, pat, ...)
+devops_get(url, ..., pat = devops_pat())
 }
 \arguments{
 \item{url}{the url of the devops api}
 
-\item{pat}{devops personal access token}
-
 \item{...}{additional arguments to GET}
+
+\item{pat}{devops personal access token}
 }
 \value{
 http response object

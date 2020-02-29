@@ -14,7 +14,7 @@
 #' @importFrom httr GET authenticate accept
 #'
 #' @export
-devops_get <- function(url, pat, ...) {
+devops_get <- function(url, ..., pat = devops_pat()) {
   message("GETing ...", url)
 
   httr::GET(

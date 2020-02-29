@@ -4,14 +4,14 @@
 \alias{devops_clone}
 \title{Perform a clone from the ICES devops git server}
 \usage{
-devops_clone(remote_url, pat, local_dir = NULL)
+devops_clone(remote_url, local_dir = NULL, pat = devops_pat())
 }
 \arguments{
 \item{remote_url}{the url of the devops git repo}
 
-\item{pat}{personal access token for devops}
-
 \item{local_dir}{the local directory you want to clone into}
+
+\item{pat}{personal access token for devops}
 }
 \value{
 a git2r repository object

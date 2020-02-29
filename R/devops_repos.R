@@ -10,7 +10,7 @@
 #' @importFrom httr content
 #'
 #' @export
-devops_repos <- function(pat, ...) {
+devops_repos <- function(...) {
   # get a list of repositories
   res <-
     devops_get(
@@ -18,7 +18,6 @@ devops_repos <- function(pat, ...) {
         "repositories",
         area = "git"
       ),
-      pat,
       ...
     )
   cont <- content(res, simplifyVector = TRUE)

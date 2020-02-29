@@ -4,11 +4,13 @@
 \alias{devops_push}
 \title{Perform a push to the ICES devops git server}
 \usage{
-devops_push(repo = ".", pat)
+devops_push(repo = ".", pat = devops_pat())
 }
 \arguments{
 \item{repo}{optional, a repository (git2r) or path, defaults to
 current workng directory.}
+
+\item{pat}{personal access token for devops}
 }
 \value{
 a git2r push object
