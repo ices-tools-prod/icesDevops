@@ -2,15 +2,15 @@
 #'
 #' This will list all the repositories you have read access too
 #'
-#' @param pat devops personal access token
 #' @param ... additional arguments to GET
+#' @param all show all columns, default = FALSE
 #'
 #' @return a data.frame
 #'
 #' @importFrom httr content
 #'
 #' @export
-devops_repos <- function(...) {
+devops_repos <- function(..., all = FALSE) {
   # get a list of repositories
   res <-
     devops_get(
@@ -21,8 +21,12 @@ devops_repos <- function(...) {
       ...
     )
   cont <- content(res, simplifyVector = TRUE)
-
-  # only show some of the content, for simplicity
   repos <- cont$value
-  repos[c("name", "webUrl", "remoteUrl", "sshUrl")]
+
+  if (all) {
+    repos
+  } else {
+    # only show some of the content, for simplicity
+    repos[c("name", "webUrl", "remoteUrl", "sshUrl")]
+  }
 }

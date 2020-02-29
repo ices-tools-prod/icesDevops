@@ -4,12 +4,12 @@
 \alias{devops_repos}
 \title{Get a list of repositories}
 \usage{
-devops_repos(..., pat = devops_pat())
+devops_repos(..., all = FALSE)
 }
 \arguments{
 \item{...}{additional arguments to GET}
 
-\item{pat}{devops personal access token}
+\item{all}{show all columns, default = FALSE}
 }
 \value{
 a data.frame
